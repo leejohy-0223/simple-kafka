@@ -12,9 +12,9 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SimpleProducer {
+public class CustomPartitionerProducer {
 
-    private static final Logger log = LoggerFactory.getLogger(SimpleProducer.class);
+    private static final Logger log = LoggerFactory.getLogger(CustomPartitionerProducer.class);
     private static final String TOPIC_NAME = "test";
     private static final String BOOTSTRAP_SERVER = "my-kafka:9092";
 
@@ -24,11 +24,12 @@ public class SimpleProducer {
         configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVER);
         configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        configs.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, CustomPartitioner.class);
 
         KafkaProducer<String, String> producer = new KafkaProducer<>(configs);
 
-        String messageValue = "testMessage3";
-        ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC_NAME, "Pangyo", "25");
+        ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC_NAME, "Pangyo", "23");
+
         Future<RecordMetadata> metadata = producer.send(record);
 
         log.info("record info is : {}", record);

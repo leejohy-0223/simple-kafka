@@ -12,9 +12,9 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SimpleProducer {
+public class ProducerWithCallback {
 
-    private static final Logger log = LoggerFactory.getLogger(SimpleProducer.class);
+    private static final Logger log = LoggerFactory.getLogger(ProducerWithCallback.class);
     private static final String TOPIC_NAME = "test";
     private static final String BOOTSTRAP_SERVER = "my-kafka:9092";
 
@@ -27,12 +27,10 @@ public class SimpleProducer {
 
         KafkaProducer<String, String> producer = new KafkaProducer<>(configs);
 
-        String messageValue = "testMessage3";
         ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC_NAME, "Pangyo", "25");
-        Future<RecordMetadata> metadata = producer.send(record);
+        producer.send(record, new ProducerCallback());
 
         log.info("record info is : {}", record);
-        log.info("future metadata is : {}", metadata.get().toString());
 
         producer.flush();
         producer.close();
