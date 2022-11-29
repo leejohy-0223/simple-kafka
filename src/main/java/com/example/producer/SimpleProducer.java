@@ -1,4 +1,4 @@
-package com.example;
+package com.example.producer;
 
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -12,9 +12,9 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ProducerWithCallback {
+public class SimpleProducer {
 
-    private static final Logger log = LoggerFactory.getLogger(ProducerWithCallback.class);
+    private static final Logger log = LoggerFactory.getLogger(SimpleProducer.class);
     private static final String TOPIC_NAME = "test";
     private static final String BOOTSTRAP_SERVER = "my-kafka:9092";
 
@@ -27,10 +27,12 @@ public class ProducerWithCallback {
 
         KafkaProducer<String, String> producer = new KafkaProducer<>(configs);
 
+        String messageValue = "testMessage3";
         ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC_NAME, "Pangyo", "25");
-        producer.send(record, new ProducerCallback());
+        Future<RecordMetadata> metadata = producer.send(record);
 
         log.info("record info is : {}", record);
+        log.info("future metadata is : {}", metadata.get().toString());
 
         producer.flush();
         producer.close();
